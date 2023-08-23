@@ -1,0 +1,43 @@
+﻿
+@model MVCCRUDOperation.Models.Emp.EmpolyeeViewModel
+ 
+
+@*<h1>
+    Bangladesh @foreach (var item in Model)
+    {
+        if (item.Id == 1)
+        {
+            @item.EmpName
+        }
+    }
+</h1>*@
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Sl</th>
+            <th>Name</th>
+            <th>Designation</th>
+            <th>Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Employees1)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.EmpName</td>
+                <td>@item.Designation</td>
+                <td>@item.Address</td>
+            </tr>
+        }
+        @foreach (var item in Model.Employees2)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.EmpName</td>
+                <td>@item.Designation</td>
+                <td>@item.Address</td>
+            </tr>
+        }
+    </tbody>
+</table>
