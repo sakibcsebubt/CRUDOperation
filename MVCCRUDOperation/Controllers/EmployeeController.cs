@@ -33,6 +33,32 @@ namespace MVCCRUDOperation.Controllers
             return View(empolyeeViewModel);
         }
 
+
+        public IActionResult Create()
+        {
+            Employee model = new ();
+            model.Id = 1;
+            model.EmpName = "Test";
+            model.Address = "BANGLADESH";
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Employee model)
+        {
+            var sql = @"INSERT INTO EMPLOYEEINFO(EmpName,Designation,Address)
+	                    OUTPUT Inserted.Id VALUES(@EmpName, @Designation, @Address)";
+            var Result = 0; 
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                connection.Open();
+                Result = await connection.QueryFirstOrDefaultAsync<int>(sql, model); 
+            }
+            if(Result > 0) return View("Success");
+            else 
+            return View();
+        }
+
         public List<Employee> GetEmpList()
         {
             //var tes = new Employee();
