@@ -78,7 +78,7 @@ namespace MVCCRUDOperation.Controllers
                 using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();
-                    var Result = await connection.ExecuteAsync(sql, Id);
+                    var Result = await connection.ExecuteAsync(sql, new {Id});
                 }
             return RedirectToAction("Index");
 
