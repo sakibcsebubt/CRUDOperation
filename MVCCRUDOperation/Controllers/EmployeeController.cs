@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using MVCCRUDOperation.Models.Emp;
 
 using System.Data.SqlClient;
+using System.Reflection;
 using static Dapper.SqlMapper;
 
 namespace MVCCRUDOperation.Controllers
@@ -12,13 +13,13 @@ namespace MVCCRUDOperation.Controllers
     {
         private readonly IConfiguration _configuration;
         public EmployeeController(IConfiguration configuration)
-        { 
-            _configuration = configuration; 
+        {
+            _configuration = configuration;
         }
         public async Task<IActionResult> Index()
         {
-           var EmpList = GetEmpList();
-           var EmpList2 = GetEmpList1(); 
+            var EmpList = GetEmpList();
+            var EmpList2 = GetEmpList1();
             var sql = "SELECT * FROM EMPLOYEEINFO";
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
@@ -36,7 +37,7 @@ namespace MVCCRUDOperation.Controllers
 
         public IActionResult Create()
         {
-            Employee model = new ();
+            Employee model = new();
             model.Id = 1;
             model.EmpName = "Test";
             model.Address = "BANGLADESH";
@@ -46,18 +47,52 @@ namespace MVCCRUDOperation.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Employee model)
         {
+            //model.Address = model.Address == null ? "" : model.Address;
+
+            if (model.Address == null)
+            {
+                model.Address = "";
+            }
+            else
+            {
+                model.Address = model.Address;
+            }
             var sql = @"INSERT INTO EMPLOYEEINFO(EmpName,Designation,Address)
 	                    OUTPUT Inserted.Id VALUES(@EmpName, @Designation, @Address)";
-            var Result = 0; 
+            var Result = 0;
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 connection.Open();
-                Result = await connection.QueryFirstOrDefaultAsync<int>(sql, model); 
+                Result = await connection.QueryFirstOrDefaultAsync<int>(sql, model);
             }
-            if(Result > 0) return View("Success");
-            else 
-            return View();
+            if (Result > 0) return View("Success");
+            else
+                return View();
         }
+
+        public async Task<IActionResult> Delete(long Id)
+        {
+            try
+            {
+                var sql = @"DELETE EMPLOYEEINFO WHERE Id = @Id";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var Result = await connection.ExecuteAsync(sql, Id);
+                }
+            return RedirectToAction("Index");
+
+            }
+            catch (Exception ex) 
+            {
+                //return ex.Message;
+                return null;
+            }
+          
+        }
+
+
+
 
         public List<Employee> GetEmpList()
         {

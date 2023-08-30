@@ -18,6 +18,7 @@
             <th>Name</th>
             <th>Designation</th>
             <th>Address</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -28,6 +29,7 @@
                 <td>@item.EmpName</td>
                 <td>@item.Designation</td>
                 <td>@item.Address</td>
+                <td><a asp-controller="Employee" asp-action="Delete" asp-route-Id="@item.Id" class="btn btn-danger">Delete</a></td>
             </tr>
         }
       @*  @foreach (var item in Model.Employees2)
